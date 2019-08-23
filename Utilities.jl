@@ -10,11 +10,7 @@ function readxyz(filename, comment=true)
     # Skip the number of atoms and comment lines
     atom_labels = []
     atom_coords = []
-    if comment
-        start = 3
-    else
-        start = 2
-    end
+    start = comment ? 3 : 2
     for line in lines[start:end]
         splitline = split(line)
         push!(atom_labels, splitline[1])
@@ -50,20 +46,20 @@ function writecom(filename, atomlabels, atomcoords, memory=50, test=true)
         println("{CCSD(T)-F12}")
     else
         open(filename, "w") do infile
-        write(infile, "memory,$(memory),m\n")
-        write(infile, "nocompress;\n")
-        write(infile, "geomtyp=xyz\n")
-        write(infile, "angstrom\n")
-        write(infile, "geometry={\n")
+        write(infile, "memory,$(memory),m\n",
+        "nocompress;\n",
+        "geomtyp=xyz\n",
+        "angstrom\n",
+        "geometry={\n")
         for atom in 1:length(atomlabels)
             write(infile, atomlabels[atom], "\t", join(map(string, atomcoords[atom]), "\t"), "\n")
         end
-        write(infile, "}\n")
-        write(infile, "basis=cc-pVTZ-F12\n")
-        write(infile, "set,charge=0\n")
-        write(infile, "set,spin=0\n")
-        write(infile, "hf\n")
-        write(infile, "{CCSD(T)-F12}\n")
+        write(infile, "}\n",
+        "basis=cc-pVTZ-F12\n",
+        "set,charge=0\n",
+        "set,spin=0\n",
+        "hf\n",
+        "{CCSD(T)-F12}\n")
         end
     end
 end
@@ -96,26 +92,26 @@ function writepbs(filenum, test=true)
         println("rm -rf \$TMPDIR")
     else
         open("mp$(filenum).pbs", "w") do infile
-            write(infile, "#!/bin/sh\n")
-            write(infile, "#PBS -N job$(filenum)\n")
-            write(infile, "#PBS -S /bin/bash\n")
-            write(infile, "#PBS -j oe\n")
-            write(infile, "#PBS -W umask=022\n")
-            write(infile, "#PBS -l walltime=00:30:00\n")
-            write(infile, "#PBS -l ncpus=1\n")
-            write(infile, "#PBS -l mem=50mb\n\n")
-            write(infile, "module load intel\n")
-            write(infile, "module load mvapich2\n")
-            write(infile, "module load pbspro\n")
-	    write(infile, "export PATH=/usr/local/apps/molpro/2015.1.35/bin:\$PATH\n\n")
-            write(infile, "export WORKDIR=\$PBS_O_WORKDIR\n")
-            write(infile, "export TMPDIR=/tmp/\$USER/\$PBS_JOBID\n")
-            write(infile, "cd \$WORKDIR\n")
-            write(infile, "mkdir -p \$TMPDIR\n\n")
-            write(infile, "date\n")
-            write(infile, "molpro -t 1 input$(filenum).com\n")
-            write(infile, "date\n\n")
-            write(infile, "rm -rf \$TMPDIR")
+            write(infile, "#!/bin/sh\n",
+            "#PBS -N job$(filenum)\n",
+            "#PBS -S /bin/bash\n",
+            "#PBS -j oe\n",
+            "#PBS -W umask=022\n",
+            "#PBS -l walltime=00:30:00\n",
+            "#PBS -l ncpus=1\n",
+            "#PBS -l mem=50mb\n\n",
+            "module load intel\n",
+            "module load mvapich2\n",
+            "module load pbspro\n",
+	    "export PATH=/usr/local/apps/molpro/2015.1.35/bin:\$PATH\n\n",
+            "export WORKDIR=\$PBS_O_WORKDIR\n",
+            "export TMPDIR=/tmp/\$USER/\$PBS_JOBID\n",
+            "cd \$WORKDIR\n",
+            "mkdir -p \$TMPDIR\n\n",
+            "date\n",
+            "molpro -t 1 input$(filenum).com\n",
+            "date\n\n",
+            "rm -rf \$TMPDIR")
         end
     end
 end
