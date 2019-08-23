@@ -119,3 +119,11 @@ function writepbs(filenum, test=true)
         end
     end
 end
+
+function energyfromfile(filename)
+    """Return the last energy value from an output file"""
+    open(filename, "r") do infile
+        lines = readlines(infile)
+        return split(filter(x -> occursin("energy=", x), lines)[end])[end]
+    end
+end

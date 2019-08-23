@@ -63,3 +63,40 @@ have python wait for molpro so you just keep changing one input file
 instead of writing them all, just capture desired value too and 
 overwrite the output file each time too to save space
 
+* Meeting notes
+
+Most abundant element : hydrogen, then helium, 93%, 7%, then everything else is left
+Most of H is in stars 
+reaction 2/1H + 3/1H -> 4/2He + 1/0n + hnu
+reaction 4/2He + 4/2He -> 8/4Be
+
+nuclei are not static, they re fluctuating, moving and bouncing off each other
+strong nuclear force pulls them back together, unless they get too far apart
+
+iron is the largest nucleus that cna be held together by the strong force
+Be will fall apart because the protons can never get far enough apart to be comfortable
+Be breaks down fast
+keeps mass density of th esun low enough thta it doesnt collapse on itself
+helium migrates out because it has greater momentum
+
+alpha process elements -> something + He so C, O, Ne
+
+xC + yO -> usually y > x -> xCO + (y-x)H2O, lots of hydrogen
+
+if x > y -> yCO + (x-y)CHn
+
+break down pahs to make more pahs
+break down water to make oxides like little rocks
+
++Potential molecule+: Al(OH)2
+
+** Ideas: 
+    - N=N-N, azole
+    - O=N-N=O
+      
+** Do these ones:
+    - Mg-O-Al
+      singlet, triplet
+    - MgO2Al square
+      CCCA calculations
+      geometry optimization of both of these at CCSD(T)-f12/cc-pvtz-f12
