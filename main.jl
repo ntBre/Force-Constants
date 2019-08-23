@@ -31,8 +31,10 @@ function firstderivative(labels, coords, delta, test=true)
             run(`mv $(comfilename) ./Input/.`)
             run(`mv mp-$(filenum).pbs ./Input/.`)
             if !test
-                run(`(cd ./Input; qsub mp$(filenum).pbs)`)
-                run(`(cd ./Input; qsub mp-$(filenum).pbs)`)
+		cd("./Input")
+		run(`qsub mp$(filenum).pbs`)
+		run(`qsub mp-$(filenum).pbs`)
+		cd("..")
             end
             tempcoords[atom][coord] += delta
         end
