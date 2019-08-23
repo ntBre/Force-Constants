@@ -120,6 +120,7 @@ function energyfromfile(filename)
     """Return the last energy value from an output file"""
     open(filename, "r") do infile
         lines = readlines(infile)
+        # Filter out the line that contains energy= and return its last element
         return split(filter(x -> occursin("energy=", x), lines)[end])[end]
     end
 end
