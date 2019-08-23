@@ -1,0 +1,65 @@
+* +This whole thing should probably be wrapped in a bash script:+
+** Call julia to generate files, submit files, then put the results back into julia
+
+* Actually julia interacts well with the shell so just do it in julia
+
+read_xyz
+store as labels and atoms
+calculate reference energy (E_0)
+
+Calculate first derivatives:
+\[F_1 \rightarrow \frac{\partial E}{\partial x} = \frac{E(O_x + \delta)-E(0)}{\delta}\]
+\[F_2 \rightarrow \frac{\partial E}{\partial x} = \frac{E(O_x - \delta)-E(0)}{\delta}\]
+...
+for example, with coordinates 
+\begin{bmatrix}
+Ox1 & Oy1 & Oz1\\
+Hx1 & Hy1 & Hz1\\
+ - & - & -
+\end{bmatrix}
+
+space is arbitrarily 250 files for now, that's the submission limit for the queue I think?
+while jobs to run:
+    if there is space:
+	generate files
+	run files
+	check if finished by looking at last line of molpro outputs?
+	when finished running:
+	    calculate energy
+	    delete files
+    else:
+	wait
+
+variations probably are just moving each combination of coordinates by the differential
+x1, y1, z1
+x2, y2, z2
+-> 
+x1+d, y1, z1
+x2, y2, z2
+...
+x1+d, y1+d, z1+d
+x2, y2, z2
+...
+x1+d, y1+d, z1+d
+x2+d, y2+d, z2+d
+
+
+$$\begin{bmatrix}
+x1 & y1 & z1\\
+x2 & y2 & z2\\
+x3 & y3 & z3\\
+\end{bmatrix} +
+ \begin{bmatrix}
+0.5 & 0 & 0\\
+0 & 0 & 0\\
+0 & 0 & 0\\
+\end{bmatrix}$$
+
+first derivatives are stepping one coordinate at a time,
+second derivatives are two at a time ...
+including the same one twice
+
+have python wait for molpro so you just keep changing one input file
+instead of writing them all, just capture desired value too and 
+overwrite the output file each time too to save space
+
