@@ -14,16 +14,16 @@ function firstderivative(labels, coords, delta)
             # increment the point
             tempcoords[atom][coord] += delta
             # write files
-            writecom(comfilename, labels, tempcoords)
-            writepbs(filenum)
+            writecom(comfilename, labels, tempcoords, 50, false)
+            writepbs(filenum, false)
             # decrement by twice delta to get
             # the negative steps
             tempcoords[atom][coord] -= 2*delta
             # update filenames
             comfilename = "input-$(filenum).com"
             # write more files
-            writecom(comfilename, labels, tempcoords)
-            writepbs(-filenum)
+            writecom(comfilename, labels, tempcoords, 50, false)
+            writepbs(-filenum, false)
             # return the coordinates to their
             # original state
             tempcoords[atom][coord] += delta
