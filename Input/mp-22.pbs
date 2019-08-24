@@ -17,8 +17,5 @@ export TMPDIR=/tmp/$USER/$PBS_JOBID
 cd $WORKDIR
 mkdir -p $TMPDIR
 
-date
-molpro -t 1 input-22.com
-date
-
+molpro -t 1 --no-xml-output input-22.com
 rm -rf $TMPDIR
