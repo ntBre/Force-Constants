@@ -36,7 +36,12 @@ function firstderivative(labels, coords, delta, test=true)
 		cd("./Input")
 		run(`qsub mp$(filenum).pbs`)
 		run(`qsub mp-$(filenum).pbs`)
-		while !(isfile("input$filenum.out") & isfile("input-$filenum.out"))
+		posout = "input$filenum.out"
+		negout = "input-$filenum.out"
+		while !(isfile(posout) & isfile(negout))
+		    sleep(1)
+		end
+		while length(searchfile(posout, "energy=")) < 1 & length(searchfile(negout, "energy=")) < 1
 		    sleep(1)
 		end
 		push!(posenergies, energyfromfile("input$filenum.out"))

@@ -1,8 +1,8 @@
 
- Primary working directories    : /tmp/r2518/14646.maple
- Secondary working directories  : /tmp/r2518/14646.maple
+ Primary working directories    : /tmp/r2518/14880.maple
+ Secondary working directories  : /tmp/r2518/14880.maple
  Wavefunction directory         : /ddn/home1/r2518/wfu/
- Main file repository           : /tmp/r2518/14646.maple/
+ Main file repository           : /tmp/r2518/14880.maple/
 
  SHA1      : d5ffa45e93fdbca01ffc919aa182cfdae0147319
  NAME      : 2015.1.35
@@ -32,9 +32,9 @@
  hf
  {CCSD(T)-F12}
 
- Variables initialized (889), CPU time= 0.00 sec
+ Variables initialized (889), CPU time= 0.01 sec
  Commands  initialized (702), CPU time= 0.01 sec, 572 directives.
- Default parameters read. Elapsed time= 0.20 sec
+ Default parameters read. Elapsed time= 0.05 sec
 
  Checking input...
  Passed
@@ -48,7 +48,7 @@
 
  **********************************************************************************************************************************
  LABEL *                                                                                 
-  64 bit serial version                                                                  DATE: 24-Aug-19          TIME: 16:30:50  
+  64 bit serial version                                                                  DATE: 24-Aug-19          TIME: 16:54:31  
  **********************************************************************************************************************************
 
  SHA1:             d5ffa45e93fdbca01ffc919aa182cfdae0147319
@@ -143,8 +143,8 @@
 
  Memory used in sort:       2.68 MW
 
- SORT1 READ     1872782. AND WROTE     1933116. INTEGRALS IN      6 RECORDS. CPU TIME:     0.07 SEC, REAL TIME:     0.10 SEC
- SORT2 READ     1933116. AND WROTE     2124910. INTEGRALS IN      1 RECORDS. CPU TIME:     0.07 SEC, REAL TIME:     0.08 SEC
+ SORT1 READ     1872782. AND WROTE     1933116. INTEGRALS IN      6 RECORDS. CPU TIME:     0.08 SEC, REAL TIME:     0.09 SEC
+ SORT2 READ     1933116. AND WROTE     2124910. INTEGRALS IN      1 RECORDS. CPU TIME:     0.08 SEC, REAL TIME:     0.08 SEC
 
  FILE SIZES:   FILE 1:    50.1 MBYTE,  FILE 4:    25.2 MBYTE,   TOTAL:     75.3 MBYTE
 
@@ -159,8 +159,8 @@
                                            T        V       H0       H01     AOSYM     SMH    MOLCAS    ERIS     OPER   
 
  PROGRAMS   *        TOTAL       INT
- CPU TIMES  *         0.52      0.43
- REAL TIME  *         1.01 SEC
+ CPU TIMES  *         0.49      0.39
+ REAL TIME  *         0.90 SEC
  DISK USED  *        75.63 MB      
  **********************************************************************************************************************************
 
@@ -234,8 +234,8 @@
                                          GEOM     BASIS   MCVARS     RHF  
 
  PROGRAMS   *        TOTAL        HF       INT
- CPU TIMES  *         0.63      0.11      0.43
- REAL TIME  *         1.13 SEC
+ CPU TIMES  *         0.60      0.11      0.39
+ REAL TIME  *         1.08 SEC
  DISK USED  *        75.63 MB      
  **********************************************************************************************************************************
 
@@ -298,7 +298,7 @@
  Screening thresholds:   THRAO=  1.00D-10  THRMO=  1.00D-09  THRPROD=  1.00D-09
                          THRSW=  1.00D-05  THROV=  1.00D-12  THRAOF12=   1.00D-08
 
- CPU time for Fock operators                      1.05 sec
+ CPU time for Fock operators                      1.06 sec
  
  Construction of ABS:
  Smallest eigenvalue of S          6.97E-04  (threshold= 1.00E-08)
@@ -310,7 +310,7 @@
  Ratio eigmin/eigmax               1.59E-06  (threshold= 1.00E-09)
  Smallest eigenvalue of S kept     1.59E-06  (threshold= 1.59E-06, 0 functions deleted, 157 kept)
  
- CPU time for CABS singles                        0.02 sec
+ CPU time for CABS singles                        0.00 sec
 
  CABS-singles contribution of  -0.00106388 patched into reference energy.
  New reference energy         -76.06651332
@@ -323,10 +323,12 @@
                          THRSW=  1.00D-05  THROV=  1.00D-12  THRAOF12=   1.00D-08
 
  CPU time for 3-index integral evaluation         0.55 sec
- CPU time for first  half transformation          0.04 sec ( 4409.0 MFLOP/sec)
+ CPU time for first  half transformation          0.05 sec ( 3527.2 MFLOP/sec)
+ CPU time for fitting                             0.02 sec ( 4092.9 MFLOP/sec)
+ CPU time for tilde quantities                    0.02 sec ( 5410.2 MFLOP/sec)
  CPU time for assembly                            0.02 sec (26756.3 MFLOP/sec)
- CPU time for tranop_f12                          0.04 sec (16298.2 MFLOP/sec)
- CPU time for f12 integrals (total)               1.54 sec, Elapsed time:      1.58 sec
+ CPU time for tranop_f12                          0.02 sec (32596.5 MFLOP/sec)
+ CPU time for f12 integrals (total)               1.56 sec, Elapsed time:      1.63 sec
  CPU time for f12 matrices (total)                0.01 sec, Elapsed time:      0.01 sec
 
  Diagonal F12 approximation with fixed coefficients:  TSING= 0.500,  TTRIP= 0.250 (scaled by -1/beta)
@@ -368,21 +370,21 @@
 
  Memory could be reduced to 1.33 Mwords without degradation in triples
 
- Integral transformation finished. Total CPU:   0.03 sec, npass=  1  Memory used:   0.24 MW
+ Integral transformation finished. Total CPU:   0.02 sec, npass=  1  Memory used:   0.24 MW
 
  Reference energy:                    -76.06651332
 
  Adding F12 terms to K(Cij), methodcc=6,  factor= 1.0
 
  ITER.      SQ.NORM     CORR.ENERGY   TOTAL ENERGY   ENERGY CHANGE        DEN1      VAR(S)    VAR(P)  DIIS     TIME  TIME/IT
-   1      1.05950910    -0.27112893   -76.33764225    -0.00062569     0.00477142  0.64D-03  0.86D-03  1  1     2.87     0.03
-   2      1.06241059    -0.27085215   -76.33736547     0.00027678    -0.00422235  0.11D-04  0.86D-04  2  2     2.90     0.03
-   3      1.06337766    -0.27096042   -76.33747374    -0.00010827    -0.00070509  0.72D-05  0.53D-05  3  3     2.92     0.03
-   4      1.06380525    -0.27097930   -76.33749261    -0.00001888    -0.00029717  0.35D-06  0.42D-06  4  4     2.95     0.03
-   5      1.06387820    -0.27097781   -76.33749113     0.00000149    -0.00001558  0.97D-07  0.24D-07  5  5     2.98     0.03
-   6      1.06389790    -0.27097669   -76.33749001     0.00000112    -0.00000324  0.81D-08  0.24D-08  6  6     3.01     0.03
-   7      1.06390305    -0.27097636   -76.33748968     0.00000032    -0.00000120  0.66D-09  0.18D-09  6  1     3.04     0.03
-   8      1.06390422    -0.27097642   -76.33748973    -0.00000005    -0.00000000  0.48D-10  0.18D-10  6  2     3.07     0.03
+   1      1.05950910    -0.27112893   -76.33764225    -0.00062569     0.00477142  0.64D-03  0.86D-03  1  1     2.88     0.04
+   2      1.06241059    -0.27085215   -76.33736547     0.00027678    -0.00422235  0.11D-04  0.86D-04  2  2     2.90     0.04
+   3      1.06337766    -0.27096042   -76.33747374    -0.00010827    -0.00070509  0.72D-05  0.53D-05  3  3     2.94     0.04
+   4      1.06380525    -0.27097930   -76.33749261    -0.00001888    -0.00029717  0.35D-06  0.42D-06  4  4     2.97     0.04
+   5      1.06387820    -0.27097781   -76.33749113     0.00000149    -0.00001558  0.97D-07  0.24D-07  5  5     3.00     0.04
+   6      1.06389790    -0.27097669   -76.33749001     0.00000112    -0.00000324  0.81D-08  0.24D-08  6  6     3.03     0.04
+   7      1.06390305    -0.27097636   -76.33748968     0.00000032    -0.00000120  0.66D-09  0.18D-09  6  1     3.07     0.04
+   8      1.06390422    -0.27097642   -76.33748973    -0.00000005    -0.00000000  0.48D-10  0.18D-10  6  2     3.09     0.04
 
  Norm of t1 vector:      0.03276823      S-energy:    -0.00000008      T1 diagnostic:  0.00819206
                                                                        D1 diagnostic:  0.01616340
@@ -395,7 +397,7 @@
   f12b correction                       0.004260189815
 
 
- Total CPU time for triples:      0.11 sec
+ Total CPU time for triples:      0.12 sec
 
 
  RESULTS
@@ -443,11 +445,11 @@
  Timing summary (sec):
 
  STEP                 CPU(USER)    SYS     CPU(TOT)    WALL
- Transformation          0.04      0.01      0.05      0.06
- CCSD iterations         0.27      0.03      0.30      0.33
- Triples                 0.11      0.00      0.11      0.11
- MP2-F12                 2.76      0.07      2.83      2.83
- F12b energy             0.02      0.01      0.03      0.03
+ Transformation          0.02      0.01      0.03      0.05
+ CCSD iterations         0.28      0.08      0.36      0.36
+ Triples                 0.12      0.00      0.12      0.13
+ MP2-F12                 2.79      0.12      2.91      2.90
+ F12b energy             0.02      0.01      0.03      0.02
 
  Program statistics:
 
@@ -469,8 +471,8 @@
                                          GEOM     BASIS   MCVARS     RHF    F12ABS    EF12   
 
  PROGRAMS   *        TOTAL   CCSD(T)        HF       INT
- CPU TIMES  *         3.86      3.22      0.11      0.43
- REAL TIME  *         4.53 SEC
+ CPU TIMES  *         3.86      3.25      0.11      0.39
+ REAL TIME  *         4.58 SEC
  DISK USED  *        78.36 MB      
  **********************************************************************************************************************************
 
