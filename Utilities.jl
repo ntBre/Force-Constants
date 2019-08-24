@@ -114,16 +114,20 @@ function writepbs(filenum, test=true)
     end
 end
 
-function energyfromfile(filename)
-    """Return the last energy value from an output file"""
+function searchfile(filename, pattern)
+    """Return an array of the lines that contain pattern in the file"""
     open(filename, "r") do infile
         lines = readlines(infile)
-        # Filter out the line that contains energy= and return its last element
-        energylines = filter(x -> occursin("energy=", x), lines)
-	if length(energylines) > 0
-            return parse(Float64, split(energylines[end])[end])
-	else 
-	    return NaN
-        end	
+        return filter(x -> occursin(pattern, x), lines)
     end
+end
+         
+function energyfromfile(filename)
+    """Return the last energy value from an output file"""
+    energylines = searchfile(filename, "energy=")
+    if length(energylines) > 0
+        return parse(Float64, split(energylines[end])[end])
+    else 
+        return NaN
+    end	
 end

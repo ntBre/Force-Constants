@@ -100,3 +100,13 @@ break down water to make oxides like little rocks
     - MgO2Al square
       CCCA calculations
       geometry optimization of both of these at CCSD(T)-f12/cc-pvtz-f12
+      
+* Main
+
+Need a way to wait for output file to be finished before reading it, right now
+depends on getting lucky with it being finished
+
+idea was to wait while energyfromfile is nan, but then if there is an error it
+would be an infinite loop
+
+now check if terminated is there!
