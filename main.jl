@@ -15,6 +15,8 @@ function firstderivative(labels, coords, delta, test=true)
         run(`mkdir Input`)
     catch e
     end
+    posenergies = []
+    negenergies = []
     for atom in 1:length(coords)
         for coord in 1:length(coords[atom])
             filenum = parse(Int, string(atom) * string(coord))
@@ -34,12 +36,16 @@ function firstderivative(labels, coords, delta, test=true)
 		cd("./Input")
 		run(`qsub mp$(filenum).pbs`)
 		run(`qsub mp-$(filenum).pbs`)
+		push!(posenergies, energyfromfile("input$filenum.out"))
+		push!(negenergies, energyfromfile("input-$filenum.out"))
 		cd("..")
             end
             tempcoords[atom][coord] += delta
         end
     end
+    return posenergies, negenergies
 end
 
 labels, coords = readxyz("geom.xyz")
-firstderivative(labels, coords, 0.05, false)
+println(firstderivative(labels, coords, 0.05, false))
+

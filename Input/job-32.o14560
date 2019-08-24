@@ -1,0 +1,9 @@
+ ? Error
+ ? file /ddn/home1/r2518/research/Force-Constants/Input/input-32.com does not exist
+ ? The problem occurs in open_stdout
+
+ GLOBAL ERROR fehler on processor   0                                         
+0:0:fehler:: 1
+(rank:0 hostname:cn058 pid:25634):ARMCI DASSERT fail. src/common/armci.c:ARMCI_Error():208 cond:0
+Last System Error Message from Task 0:: Inappropriate ioctl for device
+application called MPI_Abort(comm=0x84000001, 1) - process 0
