@@ -11,10 +11,8 @@ function firstderivative(labels, coords, delta, test=true)
         runs the necessary calculations in Molpro, and returns
         an array of the first derivative energy values"""
     tempcoords = copy(coords)
-    try
-        run(`mkdir Input`)
-    catch e
-    end
+    rm("./Input", recursive=true)
+    mkdir("Input")
     posenergies = []
     negenergies = []
     for atom in 1:length(coords)
@@ -34,18 +32,18 @@ function firstderivative(labels, coords, delta, test=true)
             run(`mv mp-$(filenum).pbs ./Input/.`)
             if !test
 		cd("./Input")
-		run(`qsub mp$(filenum).pbs`)
-		run(`qsub mp-$(filenum).pbs`)
-		posout = "input$filenum.out"
-		negout = "input-$filenum.out"
+		posjobnum = read(`qsub mp$(filenum).pbs`, String)
+		negjobnum = read(`qsub mp-$(filenum).pbs`, String)
+		println(posjobnum, negjobnum)
+		posout = "job$filenum.o$(posjobnum[1:5])"
+		negout = "job-$filenum.o$(negjobnum[1:5])"
 		while !(isfile(posout) & isfile(negout))
-		    sleep(1)
-		end
-		while length(searchfile(posout, "energy=")) < 1 & length(searchfile(negout, "energy=")) < 1
 		    sleep(1)
 		end
 		push!(posenergies, energyfromfile("input$filenum.out"))
 		push!(negenergies, energyfromfile("input-$filenum.out"))
+		run(`rm input$filenum.com input-$filenum.com mp$filenum.pbs mp-$filenum.pbs`)
+		run(`rm $posout $negout input$filenum.out input-$filenum.out`)
 		cd("..")
             end
             tempcoords[atom][coord] += delta
