@@ -108,9 +108,7 @@ function writepbs(filenum, test=true)
             "export TMPDIR=/tmp/\$USER/\$PBS_JOBID\n",
             "cd \$WORKDIR\n",
             "mkdir -p \$TMPDIR\n\n",
-            "date\n",
-            "molpro -t 1 input$(filenum).com\n",
-            "date\n\n",
+            "molpro -t 1 --no-xml-output input$(filenum).com\n",
             "rm -rf \$TMPDIR")
         end
     end

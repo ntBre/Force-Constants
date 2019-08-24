@@ -18,7 +18,7 @@ cd $WORKDIR
 mkdir -p $TMPDIR
 
 date
-molpro -t 1 input-11.com
+molpro -t 1 --no-xml-output input-11.com
 date
 
 rm -rf $TMPDIR
