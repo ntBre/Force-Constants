@@ -1,10 +1,13 @@
 include("./Utilities.jl")
 
 # DONE check if there is space to write more files
-# -> because I delete after every job finishes
 # DONE check if output file is finished
 # DONE capture energy from output
 # TODO perform calculation on energy and save
+# TODO refactor to submit one job at a time and remove pos and neg prefixes
+# 	This should make it easier to extend to higher dimensions
+
+MAXFILES = 250
 
 function firstderivative(labels, coords, delta, test=true)
     """Takes cartesian atomic coordinates and a step size,
@@ -33,9 +36,9 @@ function firstderivative(labels, coords, delta, test=true)
             writecom(negcomname, labels, tempcoords, 50, test)
             writepbs(negfilenum, test)
             # submit jobs
-            run(`mv $comfilename ./Input/.`)
+            run(`mv $poscomname ./Input/.`)
             run(`mv $pospbsname ./Input/.`)
-            run(`mv $comfilename ./Input/.`)
+            run(`mv $negcomname ./Input/.`)
             run(`mv $negpbsname ./Input/.`)
             cd("./Input")
             posjobnum = read(`qsub $pospbsname`, String)
@@ -45,14 +48,14 @@ function firstderivative(labels, coords, delta, test=true)
             negout = "job$negfilenum.o$(negjobnum[1:5])"
             push!(toread, [posfilenum, posout], [negfilenum, negout])
             if !test
-                noroomtowrite = parse(Int64, read(pipeline(`ls`, `grep pbs`, `wc -l`), String)) > 250
+                noroomtowrite = parse(Int64, read(pipeline(`ls`, `grep pbs`, `wc -l`), String)) > MAXFILES
                 nomoretowrite = atom == length(coords) & coord == length(coords[atom])
-                while noroomtowrite | nomoretowrite
+                while (noroomtowrite || nomoretowrite) && length(toread) > 0
                     if isfile(toread[1][2])
                         fileinfo = popfirst!(toread)
                         filenum = fileinfo[1]
                         file = fileinfo[2]
-                        push!(energies, [filenum, energyfromfile(file)])
+                        push!(energies, [filenum, energyfromfile("input$filenum.out")])
                         run(`rm input$filenum.com mp$filenum.pbs input$filenum.out $file`)
                     end
                 end
@@ -61,7 +64,7 @@ function firstderivative(labels, coords, delta, test=true)
             tempcoords[atom][coord] += delta
         end
     end
-    return posenergies, negenergies
+    return energies
 end
 
 labels, coords = readxyz("geom.xyz")
