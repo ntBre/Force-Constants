@@ -131,20 +131,3 @@ function energyfromfile(filename)
         return NaN
     end	
 end
-
-function makejob(filenum, atomlabels, atomcoords, memory, test)
-    comname = "input$filenum.com"
-    pbsname = "mp$filenum.pbs"
-    cd("./Input/")
-    writecom(comname, atomlabels, atomcoords, 50, test)
-    writepbs(filenum, test)
-    cd("..")
-    return pbsname
-end
-
-function submitjob(pbsname, filenum)
-    cd("./Input/")
-    jobnum = read(`qsub $pbsname`, String)
-    cd("..")
-    return "job$filenum.o$(jobnum[1:5])"
-end

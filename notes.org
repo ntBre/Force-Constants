@@ -103,6 +103,9 @@ break down water to make oxides like little rocks
       
 * Main
 
+maybe make a class for jobs? 
+    make job, run job, delete job all need some of the same info
+
 abstract job submission into its own fuction not sure if possible
 probably different for each derivative slightly
 
