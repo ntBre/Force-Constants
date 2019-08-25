@@ -103,10 +103,19 @@ break down water to make oxides like little rocks
       
 * Main
 
-Need a way to wait for output file to be finished before reading it, right now
-depends on getting lucky with it being finished
+abstract job submission into its own fuction not sure if possible
+probably different for each derivative slightly
 
-idea was to wait while energyfromfile is nan, but then if there is an error it
-would be an infinite loop
+instead of sleeping, keep list of files that need to be read and check 
+if those are finished before writing more
 
-now check if terminated is there!
+also check if there is room to write more
+
+while !roomtowrite
+    if any ready to read
+	read 
+	remove 
+write
+
+but then how to read the rest after or if you never run out of space
+also somewhat unclear how to implmeent in the current version

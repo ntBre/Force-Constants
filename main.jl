@@ -1,8 +1,9 @@
 include("./Utilities.jl")
 
-# TODO check if there is space to write more files
-# TODO check if output file is finished
-# TODO capture energy from output
+# DONE check if there is space to write more files
+# -> because I delete after every job finishes
+# DONE check if output file is finished
+# DONE capture energy from output
 # TODO perform calculation on energy and save
 
 function firstderivative(labels, coords, delta, test=true)
@@ -13,39 +14,50 @@ function firstderivative(labels, coords, delta, test=true)
     tempcoords = copy(coords)
     rm("./Input", recursive=true)
     mkdir("Input")
-    posenergies = []
-    negenergies = []
+    energies = []
+    toread = []
     for atom in 1:length(coords)
         for coord in 1:length(coords[atom])
-            filenum = parse(Int, string(atom) * string(coord))
-            comfilename = "input$(filenum).com"
+            # makenames
+            posfilenum = parse(Int, string(atom) * string(coord))
+            negfilenum = -parse(Int, string(atom) * string(coord))
+            poscomname = "input$posfilenum.com"
+            negcomname = "input$negfilenum.com"
+            pospbsname = "mp$posfilenum.pbs"
+            negpbsname = "mp$negfilenum.pbs"
+            # writefiles
             tempcoords[atom][coord] += delta
-            writecom(comfilename, labels, tempcoords, 50, test)
-            writepbs(filenum, test)
-            run(`mv $(comfilename) ./Input/.`)
-            run(`mv mp$(filenum).pbs ./Input/.`)
+            writecom(poscomname, labels, tempcoords, 50, test)
+            writepbs(posfilenum, test)
             tempcoords[atom][coord] -= 2*delta
-            comfilename = "input-$(filenum).com"
-            writecom(comfilename, labels, tempcoords, 50, test)
-            writepbs(-filenum, test)
-            run(`mv $(comfilename) ./Input/.`)
-            run(`mv mp-$(filenum).pbs ./Input/.`)
+            writecom(negcomname, labels, tempcoords, 50, test)
+            writepbs(negfilenum, test)
+            # submit jobs
+            run(`mv $comfilename ./Input/.`)
+            run(`mv $pospbsname ./Input/.`)
+            run(`mv $comfilename ./Input/.`)
+            run(`mv $negpbsname ./Input/.`)
+            cd("./Input")
+            posjobnum = read(`qsub $pospbsname`, String)
+            negjobnum = read(`qsub $negpbsname`, String)
+            println(posjobnum, negjobnum)
+            posout = "job$posfilenum.o$(posjobnum[1:5])"
+            negout = "job$negfilenum.o$(negjobnum[1:5])"
+            push!(toread, [posfilenum, posout], [negfilenum, negout])
             if !test
-		cd("./Input")
-		posjobnum = read(`qsub mp$(filenum).pbs`, String)
-		negjobnum = read(`qsub mp-$(filenum).pbs`, String)
-		println(posjobnum, negjobnum)
-		posout = "job$filenum.o$(posjobnum[1:5])"
-		negout = "job-$filenum.o$(negjobnum[1:5])"
-		while !(isfile(posout) & isfile(negout))
-		    sleep(1)
-		end
-		push!(posenergies, energyfromfile("input$filenum.out"))
-		push!(negenergies, energyfromfile("input-$filenum.out"))
-		run(`rm input$filenum.com input-$filenum.com mp$filenum.pbs mp-$filenum.pbs`)
-		run(`rm $posout $negout input$filenum.out input-$filenum.out`)
-		cd("..")
+                noroomtowrite = parse(Int64, read(pipeline(`ls`, `grep pbs`, `wc -l`), String)) > 250
+                nomoretowrite = atom == length(coords) & coord == length(coords[atom])
+                while noroomtowrite | nomoretowrite
+                    if isfile(toread[1][2])
+                        fileinfo = popfirst!(toread)
+                        filenum = fileinfo[1]
+                        file = fileinfo[2]
+                        push!(energies, [filenum, energyfromfile(file)])
+                        run(`rm input$filenum.com mp$filenum.pbs input$filenum.out $file`)
+                    end
+                end
             end
+            cd("..")
             tempcoords[atom][coord] += delta
         end
     end
