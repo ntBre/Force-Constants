@@ -1,6 +1,3 @@
-* +This whole thing should probably be wrapped in a bash script:+
-** Call julia to generate files, submit files, then put the results back into julia
-
 * Actually julia interacts well with the shell so just do it in julia
 
 read_xyz
@@ -102,23 +99,19 @@ break down water to make oxides like little rocks
       geometry optimization of both of these at CCSD(T)-f12/cc-pvtz-f12
       
 * Main
+** Options for second derivatives
+    - Added twice 
+    - Subtracted twice - this and above are same as first derivative with 2*delta
+    - Added in two different places
+    - Subtracted in two places - above can be handled with one extra loop
+    - Added/subtracted - last two from if j!= k 
+    - Subtracted/added
+      
+** Options for third derivatives
+    - Added thrice
+    - Subtracted thrice
+    - Added twice in one, once in another 
+    - Subtracted twice in one, once in another 
+    - Added in three different places
+    - Subtracted in three different places
 
-maybe make a class for jobs? 
-    make job, run job, delete job all need some of the same info
-
-abstract job submission into its own fuction not sure if possible
-probably different for each derivative slightly
-
-instead of sleeping, keep list of files that need to be read and check 
-if those are finished before writing more
-
-also check if there is room to write more
-
-while !roomtowrite
-    if any ready to read
-	read 
-	remove 
-write
-
-but then how to read the rest after or if you never run out of space
-also somewhat unclear how to implmeent in the current version

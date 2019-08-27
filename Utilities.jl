@@ -37,7 +37,11 @@ function writecom(filename, atomlabels, atomcoords, memory=50, test=true)
         println("geomtyp=xyz")
         println("angstrom")
         println("geometry={")
-        printxyz(atomlabels, atomcoords)
+        include("Utilities.jl")
+        for atom in 1:length(atomlabels)
+            start = 3*(atom-1) + 1
+            println(atomlabels[atom], "\t", join(map(string, atomcoords[start:start+2]), "\t"), "\n")
+        end
         println("}")
         println("basis=cc-pVTZ-F12")
         println("set,charge=0")
@@ -52,7 +56,8 @@ function writecom(filename, atomlabels, atomcoords, memory=50, test=true)
         "angstrom\n",
         "geometry={\n")
         for atom in 1:length(atomlabels)
-            write(infile, atomlabels[atom], "\t", join(map(string, atomcoords[atom]), "\t"), "\n")
+            start = 3*(atom-1) + 1
+            write(infile, atomlabels[atom], "\t", join(map(string, atomcoords[start:start+2]), "\t"), "\n")
         end
         write(infile, "}\n",
         "basis=cc-pVTZ-F12\n",
