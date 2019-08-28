@@ -110,9 +110,9 @@ break down water to make oxides like little rocks
 ** Options for third derivatives
     - Added thrice
     - Subtracted thrice
-    - Added twice in one, once in another 
-    - Subtracted twice in one, once in another 
     - Added in three different places
     - Subtracted in three different places
+    - Added twice in one, once in another 
+    - Subtracted twice in one, once in another 
 
 probably move each derivative to its own file just to keep things straight
