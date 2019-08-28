@@ -3,13 +3,14 @@ using Combinatorics
 
 MAXFILES = 250
 
-function firstderivative(labels, coords, delta, test=true)
+function getenergies(labels, coords, delta, transforms, test=true)
     """Takes cartesian atomic coordinates and a step size,
         writes a .pbs and .com file for each possible step, 
         runs the necessary calculations in Molpro, and returns
         an array of the first derivative energy values"""
     rows = length(coords)
     cols = length(coords[1])
+    # vcat the splatted coords array and reshape it
     coordarray = reshape(vcat(copy(coords)...), (rows, cols))
     rm("./Input", recursive=true)
     mkdir("Input")
@@ -18,18 +19,12 @@ function firstderivative(labels, coords, delta, test=true)
     toread = []
     push!(toread, [0, refout])
     energies = []
-    sampler = zeros(length(coordarray))
-    sampler[1] = 1
-    transforms = unique(permutations(sampler))
     for i in 1:length(transforms)
-        posfilenum = i
-        negfilenum = -i
-        pcoords = coordarray + delta*reshape(transforms[i], (rows, cols))
-        ncoords = coordarray - delta*reshape(transforms[i], (rows, cols))
-        posout = submitjob(makejob(posfilenum, labels, pcoords, 50, test), posfilenum)
-        negout = submitjob(makejob(negfilenum, labels, ncoords, 50, test), negfilenum)
-        println(posout, "\n", negout, "\n\n")
-        push!(toread, [posfilenum, posout], [negfilenum, negout])
+        filenum = makefilenum(transforms[i])
+        coords = coordarray + delta*reshape(transforms[i], (rows, cols))
+        outfile = submitjob(makejob(filenum, labels, coords, 50, test), filenum)
+        println(outfile, "\n")
+        push!(toread, [filenum, outfile])
         if !test
             cd("./Input/")
             noroomtowrite = parse(Int64, read(pipeline(`ls`, `grep pbs`, `wc -l`), String)) > MAXFILES
@@ -46,10 +41,24 @@ function firstderivative(labels, coords, delta, test=true)
         cd("..")
         end
     end
+    return energies
+end
+        
+function first()
+    sampler = zeros(length(coordarray))
+    psampler = copy(sampler)
+    psampler[1] = 1
+    nsampler = copy(sampler)
+    nsampler[1] = -1
+    transforms = vcat(unique(permutations(psampler)), unique(permutations(nsampler)))
+
+    labels, coords = readxyz("geom.xyz")
+    delta = 0.05
+    energies = getenergies(labels, coords, delta, transforms, false)
+
     e0 = popfirst!(energies)[2]
     derivatives = map(x -> [x[1], x[2] - e0 / delta], energies)
     return derivatives
 end
-        
-labels, coords = readxyz("geom.xyz")
-println(firstderivative(labels, coords, 0.05, false))
+
+println(first())

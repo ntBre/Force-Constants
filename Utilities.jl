@@ -153,3 +153,17 @@ function submitjob(pbsname, filenum)
     cd("..")
     return "job$filenum.o$(jobnum[1:5])"
 end
+
+function makefilenum(tarray)
+    """Make a filenum by concatenating the index of 
+        transformation and the sign of the transform"""
+    filenum = ""
+    for i in 1:length(tarray)
+        if tarray[i] > 0
+            filenum *= string(i)
+        elseif tarray[i] < 0
+            filenum *= ("-" * string(i))
+        end
+    end
+    return filenum
+end

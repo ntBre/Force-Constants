@@ -115,3 +115,4 @@ break down water to make oxides like little rocks
     - Added in three different places
     - Subtracted in three different places
 
+probably move each derivative to its own file just to keep things straight
