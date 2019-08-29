@@ -160,9 +160,9 @@ function makefilenum(tarray)
     filenum = ""
     for i in 1:length(tarray)
         if tarray[i] > 0
-            filenum *= string(i)
+            filenum *= string(i) ^ Int(tarray[i])
         elseif tarray[i] < 0
-            filenum *= ("-" * string(i))
+            filenum *= ("-" * string(i)) ^ abs(Int(tarray[i]))
         end
     end
     return filenum
