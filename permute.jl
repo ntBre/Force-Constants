@@ -31,6 +31,7 @@ function getenergies(labels, coordarray, delta, transforms, test=true)
                     filenum = fileinfo[1]
                     file = fileinfo[2]
                     push!(energies, [filenum, energyfromfile("input$filenum.out")])
+                    noroomtowrite = parse(Int64, read(pipeline(`ls`, `grep pbs`, `wc -l`), String)) > MAXFILES
                     run(`rm input$filenum.com mp$filenum.pbs input$filenum.out $file`)
                 end
             end
@@ -54,9 +55,10 @@ function first()
     transforms = vcat(unique(permutations(psampler)), unique(permutations(nsampler)))
     delta = 0.05
     energies = getenergies(labels, coordarray, delta, transforms, false)
-    e0 = popfirst!(energies)[2]
-    derivatives = map(x -> [x[1], x[2] - e0 / delta], energies)
-    return derivatives
+    return energies
+    #e0 = popfirst!(energies)[2]
+    #derivatives = map(x -> [x[1], x[2] - e0 / delta], energies)
+    #return derivatives
 end
 
 function second()
@@ -260,4 +262,4 @@ end
 #println(first())
 #println(second())
 #println(third())
-println(fourth())
+#println(fourth())
