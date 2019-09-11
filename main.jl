@@ -248,18 +248,33 @@ function fourth()
     return energies
 end
 
-function firstderivative()
+function firstderivative(delta)
     energies = readdlm("1st.dat")
+    de = []
     for i in 1:length(energies[1:end, 1])
         for j in i:length(energies[1:end, 1])
             if energies[i] == -energies[j]
-                println(energies[i,2] - energies[j,2])
+                push!(de, (energies[i,2] - energies[j,2])/(2*delta))
             end
         end
     end
+    return de
 end
 
-firstderivative()
+function secondderivative(delta)
+    energies = readdlm("2nd.dat")
+    de = []
+    for i in 1:length(energies[1:end, 1])
+        push!(de, [energies[i], energies[i,2]])
+    end
+    return de
+end
+
+labels, coords = readxyz("geom.xyz")
+delta = 0.005
+de = firstderivative(delta)
+println(firstderivative(delta))
+#de = secondderivative(delta)
 
 #writedlm("1st.dat", first())
 #writedlm("2nd.dat", second())

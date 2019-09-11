@@ -160,10 +160,35 @@ function makefilenum(tarray)
     filenum = ""
     for i in 1:length(tarray)
         if tarray[i] > 0
-            filenum *= string(i) ^ Int(tarray[i])
+            filenum *= ("+" * string(i)) ^ Int(tarray[i])
         elseif tarray[i] < 0
             filenum *= ("-" * string(i)) ^ abs(Int(tarray[i]))
         end
     end
     return filenum
 end
+
+function parsefilenum(filenum)
+    nums = []
+    for c in 1:length(filenum)
+        i = c + 1
+        if filenum[c] in ['+', '-']
+            while i <= length(filenum) && !(filenum[i] in ['+', '-'])
+                push!(nums, filenum[c:i])
+                i += 1
+            end
+        end
+    end
+    return map(x -> parse(Int64, x), nums)
+end
+
+function zipper(a, b)
+    """Zips together arrays a and b, starting with element 1 of array a"""
+    zipped = []
+    for i in 1:length(a)
+       push!(zipped, a[i]) 
+       push!(zipped, b[i]) 
+    end
+    return zipped
+end
+
