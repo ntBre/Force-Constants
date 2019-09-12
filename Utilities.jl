@@ -182,13 +182,30 @@ function parsefilenum(filenum)
     return map(x -> parse(Int64, x), nums)
 end
 
-function zipper(a, b)
+function zipper(args...)
     """Zips together arrays a and b, starting with element 1 of array a"""
     zipped = []
-    for i in 1:length(a)
-       push!(zipped, a[i]) 
-       push!(zipped, b[i]) 
+    for i in 1:length(args[1])
+        for j in 1:length(args)
+            push!(zipped, args[j][i]) 
+        end
     end
     return zipped
 end
 
+function negate(arr, target, counter)
+    """Take 2d-array arr and return an array with the element at counter negated"""
+    returnarr = deepcopy(arr)
+    for i in 1:length(returnarr)
+        count = 0
+        for j in 1:length(returnarr[i])
+            if returnarr[i][j] == target && count == counter - 1
+                returnarr[i][j] = -returnarr[i][j]
+                count += 1
+            elseif returnarr[i][j] == target
+                count += 1
+            end
+        end
+    end
+    return returnarr
+end
