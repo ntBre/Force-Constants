@@ -82,7 +82,7 @@ function writepbs(filenum, test=true)
         println("#PBS -W umask=022\n")
         println("#PBS -l walltime=00:30:00\n")
         println("#PBS -l ncpus=1\n")
-        println("#PBS -l mem=50mb\n\n")
+        println("#PBS -l mem=32gb\n\n")
         println("module load intel\n")
         println("module load mvapich2\n")
         println("module load pbspro\n")
@@ -141,7 +141,7 @@ function makejob(filenum, atomlabels, atomcoords, memory, test)
     comname = "input$filenum.com"
     pbsname = "mp$filenum.pbs"
     cd("./Input/")
-    writecom(comname, atomlabels, atomcoords, 50, test)
+    writecom(comname, atomlabels, atomcoords, memory, test)
     writepbs(filenum, test)
     cd("..")
     return pbsname

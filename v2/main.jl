@@ -30,16 +30,18 @@ function first(xyzfile, delta)
     toread = []
     d1s = []
     for i in 1:2:length(transforms)
-        filenum = makefilenum(transforms[i])
-        coords = coordarray + delta*reshape(transforms[i], (length(labels), 3))
-        outfile = submitjob(makejob(filenum, labels, coords, 50, test), filenum)
-        println(outfile, "\n")
-        filenum2 = makefilenum(transforms[i+1])
-        coords = coordarray + delta*reshape(transforms[i+1], (length(labels), 3))
-        outfile2 = submitjob(makejob(filenum2, labels, coords, 50, test), filenum2)
-        println(outfile2, "\n")
-        push!(toread, ([filenum, outfile], [filenum2, outfile2]))
-        numfiles += 2
+            j = i
+            files = []
+            while j < i+2
+                filenum = makefilenum(transforms[j])
+                coords = coordarray + delta*reshape(transforms[j], (length(labels), 3))
+                outfile = submitjob(makejob(filenum, labels, coords, 312, test), filenum)
+                println(outfile, "\n")
+                j += 1
+                push!(files, [filenum, outfile])
+            end
+            push!(toread, files)
+            numfiles += 2
         if !test
             cd("./Input/")
             noroomtowrite = numfiles > MAXFILES
@@ -112,7 +114,7 @@ function second(xyzfile, delta)
     transforms = vcat(firsttransforms, mixed)
     numfiles = 0
     toread = []
-    refjob = makejob(0, labels, coordarray, 50, test)
+    refjob = makejob(0, labels, coordarray, 312, test)
     refout = submitjob(refjob, 0)
     println(refout, "\n")
     push!(toread, [0, refout])
@@ -124,43 +126,31 @@ function second(xyzfile, delta)
     i = 1
     while i <= length(transforms)
         # change for second
+        j = i
         if 2 in transforms[i]
-            filenum = makefilenum(transforms[i])
-            coords = coordarray + delta*reshape(transforms[i], (length(labels), 3))
-            outfile = submitjob(makejob(filenum, labels, coords, 50, test), filenum)
-            println(outfile, "\n")
-
-            filenum2 = makefilenum(transforms[i+1])
-            coords = coordarray + delta*reshape(transforms[i+1], (length(labels), 3))
-            outfile2 = submitjob(makejob(filenum2, labels, coords, 50, test), filenum2)
-            println(outfile2, "\n")
-
-            push!(toread, ([filenum, outfile], [filenum2, outfile2]))
+            files = []
+            while j < i+2
+                filenum = makefilenum(transforms[j])
+                coords = coordarray + delta*reshape(transforms[j], (length(labels), 3))
+                outfile = submitjob(makejob(filenum, labels, coords, 312, test), filenum)
+                println(outfile, "\n")
+                j += 1
+                push!(files, [filenum, outfile])
+            end
+            push!(toread, files)
             numfiles += 2
             i += 2
         else
-            ppnum = makefilenum(transforms[i])
-            coords = coordarray + delta*reshape(transforms[i], (length(labels), 3))
-            ppout = submitjob(makejob(ppnum, labels, coords, 50, test), ppnum)
-            println(ppout, "\n")
-
-            pnnum = makefilenum(transforms[i+1])
-            coords = coordarray + delta*reshape(transforms[i+1], (length(labels), 3))
-            pnout = submitjob(makejob(pnnum, labels, coords, 50, test), pnnum)
-            println(pnout, "\n")
-
-            npnum = makefilenum(transforms[i+2])
-            coords = coordarray + delta*reshape(transforms[i+2], (length(labels), 3))
-            npout = submitjob(makejob(npnum, labels, coords, 50, test), npnum)
-            println(npout, "\n")
-
-            nnnum = makefilenum(transforms[i+3])
-            coords = coordarray + delta*reshape(transforms[i+3], (length(labels), 3))
-            nnout = submitjob(makejob(nnnum, labels, coords, 50, test), nnnum)
-            println(nnout, "\n")
-
-            push!(toread, ([ppnum, ppout], [pnnum, pnout], [npnum, npout],
-                           [nnnum, nnout]))
+            files = []
+            while j < i+4
+                filenum = makefilenum(transforms[j])
+                coords = coordarray + delta*reshape(transforms[j], (length(labels), 3))
+                outfile = submitjob(makejob(filenum, labels, coords, 312, test), filenum)
+                println(outfile, "\n")
+                j += 1
+                push!(files, [filenum, outfile])
+            end
+            push!(toread, files)
             numfiles += 4
             i += 4
         end
@@ -319,42 +309,41 @@ function third(xyzfile, delta)
     i = 1
     while i <= length(transforms)
         if 3 in transforms[i]
-            # TODO unmixed third derivatives
             # (E(3delta) - 3E(delta) + 3E(-delta)-E(-3delta)) / (2delta)^3
-            filenum = makefilenum(transforms[i])
-            coords = coordarray + delta*reshape(transforms[i], (length(labels), 3))
-            outfile = submitjob(makejob(filenum, labels, coords, 50, test), filenum)
-            println(outfile, "\n")
-
-            filenum2 = makefilenum(transforms[i+1])
-            coords = coordarray + delta*reshape(transforms[i+1], (length(labels), 3))
-            outfile2 = submitjob(makejob(filenum2, labels, coords, 50, test), filenum2)
-            println(outfile2, "\n")
-
-            push!(toread, ([filenum, outfile], [filenum2, outfile2]))
-            numfiles += 2
-            i += 2
+            j = i
+            files = []
+            while j < i+4
+                filenum = makefilenum(transforms[j])
+                coords = coordarray + delta*reshape(transforms[j], (length(labels), 3))
+                outfile = submitjob(makejob(filenum, labels, coords, 312, test), filenum)
+                println(outfile, "\n")
+                j += 1
+                push!(files, [filenum, outfile])
+            end
+            push!(toread, files)
+            numfiles += 4
+            i += 4
         elseif 2 in transforms[i]
             # TODO 2/1 derivatives
             # E(2dx;dy) - 2*E(0;dy) + E(-2dx;dy) - E(2dx;-dy) + 2*E(0;-dy) - E(-2dx;-dy)) / (2*delta)^3
             ppnum = makefilenum(transforms[i])
             coords = coordarray + delta*reshape(transforms[i], (length(labels), 3))
-            ppout = submitjob(makejob(ppnum, labels, coords, 50, test), ppnum)
+            ppout = submitjob(makejob(ppnum, labels, coords, 312, test), ppnum)
             println(ppout, "\n")
 
             pnnum = makefilenum(transforms[i+1])
             coords = coordarray + delta*reshape(transforms[i+1], (length(labels), 3))
-            pnout = submitjob(makejob(pnnum, labels, coords, 50, test), pnnum)
+            pnout = submitjob(makejob(pnnum, labels, coords, 312, test), pnnum)
             println(pnout, "\n")
 
             npnum = makefilenum(transforms[i+2])
             coords = coordarray + delta*reshape(transforms[i+2], (length(labels), 3))
-            npout = submitjob(makejob(npnum, labels, coords, 50, test), npnum)
+            npout = submitjob(makejob(npnum, labels, coords, 312, test), npnum)
             println(npout, "\n")
 
             nnnum = makefilenum(transforms[i+3])
             coords = coordarray + delta*reshape(transforms[i+3], (length(labels), 3))
-            nnout = submitjob(makejob(nnnum, labels, coords, 50, test), nnnum)
+            nnout = submitjob(makejob(nnnum, labels, coords, 312, test), nnnum)
             println(nnout, "\n")
 
             push!(toread, ([ppnum, ppout], [pnnum, pnout], [npnum, npout],
