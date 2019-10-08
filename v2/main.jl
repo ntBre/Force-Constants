@@ -1,7 +1,7 @@
 include("../Utilities.jl")
 using Combinatorics
 
-MAXFILES = 10
+MAXFILES = 20
 
 macro unperm(arr)
     return :( unique(permutations($(esc(arr)))) )
@@ -61,6 +61,7 @@ function firstd(xyzfile, delta)
                     run(`rm input$nfilenum.com mp$nfilenum.pbs input$nfilenum.out $nfile`)
                     numfiles -= 2
                 end
+	        noroomtowrite = numfiles > MAXFILES
             end
         cd("..")
         end
@@ -121,7 +122,7 @@ function second(xyzfile, delta)
     numfiles += 1
     # flag for checking if e0 has been read yet
     unread = true
-    d2s = []
+    d2s = zeros(rows*3, rows*3)
     e0 = nothing
     i = 1
     while i <= length(transforms)
@@ -154,10 +155,9 @@ function second(xyzfile, delta)
             numfiles += 4
             i += 4
         end
-
         if !test
             cd("./Input/")
-            noroomtowrite = parse(Int64, read(pipeline(`ls`, `grep pbs`, `wc -l`), String)) > MAXFILES
+	    noroomtowrite = numfiles > MAXFILES
             nomoretowrite = i == length(transforms) - 1
             while (noroomtowrite || nomoretowrite) && length(toread) > 0
                 # e0 calculation 
@@ -166,8 +166,10 @@ function second(xyzfile, delta)
                     filenum = fileinfo[1]
                     file = fileinfo[2]
                     e0 = energyfromfile("input$filenum.out")
-                    noroomtowrite = numfiles > MAXFILES
+                    try 
                     run(`rm input$filenum.com mp$filenum.pbs input$filenum.out $file`)
+                    catch e
+                    end
                     unread = false
                     numfiles -= 1
                 # unmixed derivatives
@@ -180,9 +182,13 @@ function second(xyzfile, delta)
                         nfile = files[2][2]
                         fxp2x = energyfromfile("input$pfilenum.out")
                         fxm2x = energyfromfile("input$nfilenum.out")
-                        push!(d2s, (fxp2x - 2*e0 + fxm2x)/(2*delta)^2)
+			println("pfilenum, nfilenum, E(+2d), E(-2d), e0 ", pfilenum, nfilenum, fxp2x, fxm2x, e0)
+                        d2s[parsefilenum(pfilenum)...] = (fxp2x - 2*e0 + fxm2x)/(2*delta)^2
+                        try 
                         run(`rm input$pfilenum.com mp$pfilenum.pbs input$pfilenum.out $pfile`)
                         run(`rm input$nfilenum.com mp$nfilenum.pbs input$nfilenum.out $nfile`)
+                        catch e
+                        end
                         numfiles -= 2
                     end
                 # mixed derivatives
@@ -203,19 +209,25 @@ function second(xyzfile, delta)
                         fpm = energyfromfile("input$pnfilenum.out")
                         fmp = energyfromfile("input$npfilenum.out")
                         fmm = energyfromfile("input$nnfilenum.out")
+                        try
                         run(`rm input$ppfilenum.com mp$ppfilenum.pbs input$ppfilenum.out $ppfile`)
                         run(`rm input$pnfilenum.com mp$pnfilenum.pbs input$pnfilenum.out $pnfile`)
                         run(`rm input$npfilenum.com mp$npfilenum.pbs input$npfilenum.out $npfile`)
                         run(`rm input$nnfilenum.com mp$nnfilenum.pbs input$nnfilenum.out $nnfile`)
-                        numfiles -=4
-                        push!(d2s, (fpp - fpm - fmp + fmm)/(4*delta^2))
+                        catch e
+                        end
+                        numfiles -= 4
+			println("ppfilenum, pnfilenum, npfilenum, nnfilenum, fpp, fpm, fmp, fmm ", ppfilenum, pnfilenum, npfilenum,
+				nnfilenum, fpp, fpm, fmp, fmm)
+                        d2s[parsefilenum(ppfilenum)...] = (fpp - fpm - fmp + fmm)/(4*delta^2)
                     end
+		    noroomtowrite = numfiles > MAXFILES
                 end
             end
         cd("..")
         end
     end
-    return d2s
+    return transpose(reshape(d2s, (3,:)))
 end
 
 function third(xyzfile, delta)
@@ -686,7 +698,8 @@ function fourth(xyzfile, delta)
                         ppmfile = files[5][2]
                         pmmfile = files[6][2]
                         mpmfile = files[7][2]
-                        mmmfile = files[8][2] fppp = energyfromfile("input$pppfilenum.out")
+                        mmmfile = files[8][2]
+                        fppp = energyfromfile("input$pppfilenum.out")
                         fpmp = energyfromfile("input$pmpfilenum.out")
                         fmpp = energyfromfile("input$mppfilenum.out")
                         fmmp = energyfromfile("input$mmpfilenum.out")
@@ -706,6 +719,8 @@ function fourth(xyzfile, delta)
 end
 
 #println(firstd("../geom.xyz", 0.005))
-#println(second("../geom.xyz", 0.005))
+d2s = second("../geom.xyz", 0.005)
+display(d2s)
+
 #println(third("../geom.xyz", 0.005))
 #println(fourth("../geom.xyz", 0.005))
