@@ -96,6 +96,7 @@ function writepbs(filenum, test=true)
         println("date\n\n")
         println("rm -rf \$TMPDIR")
     else
+# 10/9/19 updated to request 32gb of memory
         open("mp$(filenum).pbs", "w") do infile
             write(infile, "#!/bin/sh\n",
             "#PBS -N job$(filenum)\n",
@@ -104,7 +105,7 @@ function writepbs(filenum, test=true)
             "#PBS -W umask=022\n",
             "#PBS -l walltime=00:30:00\n",
             "#PBS -l ncpus=1\n",
-            "#PBS -l mem=50mb\n\n",
+            "#PBS -l mem=32gb\n\n",
             "module load intel\n",
             "module load mvapich2\n",
             "module load pbspro\n",

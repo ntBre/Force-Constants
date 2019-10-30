@@ -55,7 +55,8 @@ function firstd(xyzfile, delta)
                     nfile = files[2][2]
                     fxpx = energyfromfile("input$pfilenum.out")
                     fxmx = energyfromfile("input$nfilenum.out")
-                    push!(d1s, (fxpx - fxmx) / (2 * delta))
+                    # trying to round to get hard 0
+                    push!(d1s, (round(fxpx, digits=8) - round(fxmx, digits=8)) / (2 * delta))
                     noroomtowrite = numfiles > MAXFILES
                     run(`rm input$pfilenum.com mp$pfilenum.pbs input$pfilenum.out $pfile`)
                     run(`rm input$nfilenum.com mp$nfilenum.pbs input$nfilenum.out $nfile`)
@@ -69,6 +70,11 @@ function firstd(xyzfile, delta)
     return d1s
 end
 
+# TODO don't delete files - changed
+# 	print filenums and energies - changed
+#	 - should make sure math is right
+# 	print untransformed array at end - changed
+# 	 - should help to make sure printing is good
 function second(xyzfile, delta)
     """Returns the second derivatives"""
     cd("/ddn/home1/r2518/research/Force-Constants/v2")
@@ -166,10 +172,10 @@ function second(xyzfile, delta)
                     filenum = fileinfo[1]
                     file = fileinfo[2]
                     e0 = energyfromfile("input$filenum.out")
-                    try 
-                    run(`rm input$filenum.com mp$filenum.pbs input$filenum.out $file`)
-                    catch e
-                    end
+                    #try 
+                    #run(`rm input$filenum.com mp$filenum.pbs input$filenum.out $file`)
+                    #catch e
+                    #end
                     unread = false
                     numfiles -= 1
                 # unmixed derivatives
@@ -184,18 +190,17 @@ function second(xyzfile, delta)
                         fxm2x = energyfromfile("input$nfilenum.out")
 			println("pfilenum, nfilenum, E(+2d), E(-2d), e0 ", pfilenum, nfilenum, fxp2x, fxm2x, e0)
                         d2s[parsefilenum(pfilenum)...] = (fxp2x - 2*e0 + fxm2x)/(2*delta)^2
-                        try 
-                        run(`rm input$pfilenum.com mp$pfilenum.pbs input$pfilenum.out $pfile`)
-                        run(`rm input$nfilenum.com mp$nfilenum.pbs input$nfilenum.out $nfile`)
-                        catch e
-                        end
+                    #    try 
+                    #    run(`rm input$pfilenum.com mp$pfilenum.pbs input$pfilenum.out $pfile`)
+                    #    run(`rm input$nfilenum.com mp$nfilenum.pbs input$nfilenum.out $nfile`)
+                    #    catch e
+                    #    end
                         numfiles -= 2
                     end
                 # mixed derivatives
                 elseif !unread && length(toread[1]) == 4
                     if isfile(toread[1][1][2]) && isfile(toread[1][2][2]) &&
                         isfile(toread[1][3][2]) && isfile(toread[1][4][2])
-
                         files = popfirst!(toread)
                         ppfilenum = files[1][1]
                         ppfile = files[1][2]
@@ -209,13 +214,13 @@ function second(xyzfile, delta)
                         fpm = energyfromfile("input$pnfilenum.out")
                         fmp = energyfromfile("input$npfilenum.out")
                         fmm = energyfromfile("input$nnfilenum.out")
-                        try
-                        run(`rm input$ppfilenum.com mp$ppfilenum.pbs input$ppfilenum.out $ppfile`)
-                        run(`rm input$pnfilenum.com mp$pnfilenum.pbs input$pnfilenum.out $pnfile`)
-                        run(`rm input$npfilenum.com mp$npfilenum.pbs input$npfilenum.out $npfile`)
-                        run(`rm input$nnfilenum.com mp$nnfilenum.pbs input$nnfilenum.out $nnfile`)
-                        catch e
-                        end
+                    #    try
+                    #    run(`rm input$ppfilenum.com mp$ppfilenum.pbs input$ppfilenum.out $ppfile`)
+                    #    run(`rm input$pnfilenum.com mp$pnfilenum.pbs input$pnfilenum.out $pnfile`)
+                    #    run(`rm input$npfilenum.com mp$npfilenum.pbs input$npfilenum.out $npfile`)
+                    #    run(`rm input$nnfilenum.com mp$nnfilenum.pbs input$nnfilenum.out $nnfile`)
+                    #    catch e
+                    #    end
                         numfiles -= 4
 			println("ppfilenum, pnfilenum, npfilenum, nnfilenum, fpp, fpm, fmp, fmm ", ppfilenum, pnfilenum, npfilenum,
 				nnfilenum, fpp, fpm, fmp, fmm)
@@ -227,6 +232,8 @@ function second(xyzfile, delta)
         cd("..")
         end
     end
+    println(d2s)
+    display(d2s)
     return transpose(reshape(d2s, (3,:)))
 end
 
