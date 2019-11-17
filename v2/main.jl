@@ -232,9 +232,7 @@ function second(xyzfile, delta)
         cd("..")
         end
     end
-    println(d2s)
-    display(d2s)
-    return transpose(reshape(d2s, (3,:)))
+    printdata(d2s)
 end
 
 function third(xyzfile, delta)
@@ -726,8 +724,6 @@ function fourth(xyzfile, delta)
 end
 
 #println(firstd("../geom.xyz", 0.005))
-d2s = second("../geom.xyz", 0.005)
-display(d2s)
-
+second("../geom.xyz", 0.005)
 #println(third("../geom.xyz", 0.005))
 #println(fourth("../geom.xyz", 0.005))

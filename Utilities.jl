@@ -1,4 +1,5 @@
 """Utility functions for force constants"""
+using Printf
 
 function readxyz(filename, comment=true)
     """Read .xyz file with name filename and return two arrays, one of
@@ -209,4 +210,13 @@ function negate(arr, target, counter)
         end
     end
     return returnarr
+end
+
+function printdata(data)
+    """Takes a 2d array of enery values and prints the spectro-formatted version of it"""
+    t = transpose(data)
+    for i in 1:3:length(t)-2
+        s = map(x -> @sprintf("%20.10f", x), data[i:i+2])
+        println(join(s))
+    end
 end
