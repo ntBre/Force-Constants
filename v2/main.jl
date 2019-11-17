@@ -77,7 +77,7 @@ end
 # 	 - should help to make sure printing is good
 function second(xyzfile, delta)
     """Returns the second derivatives"""
-    cd("/ddn/home1/r2518/research/Force-Constants/v2")
+    cd("/ddn/home1/r2518/chem/Force-Constants/v2")
     test = false
     try 
         rm("./Input", recursive=true)
@@ -724,6 +724,8 @@ function fourth(xyzfile, delta)
 end
 
 #println(firstd("../geom.xyz", 0.005))
-second("../geom.xyz", 0.005)
+println(pwd())
+println(readxyz("../geom.xyz"))
+second("./geom.xyz", 0.005)
 #println(third("../geom.xyz", 0.005))
 #println(fourth("../geom.xyz", 0.005))
